@@ -88,7 +88,7 @@ def assemble_text(entries):
 def page_record():
     st.header("Record a Munro")
     st.write("Choose a Munro you've climbed. It can be a "
-             "recent day or one from years ago.")
+             "recent one or one from years ago.")
 
     hill_name = st.selectbox("Which hill?", MUNRO_NAMES, index=None,
                              placeholder="Start typing to find a Munro")
