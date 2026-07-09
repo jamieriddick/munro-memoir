@@ -138,7 +138,7 @@ def page_record():
 
 
 def page_my_rounds():
-    st.header("My rounds")
+    st.header("My munros")
     entries = get_entries()
     if not entries:
         st.write("No rounds recorded yet this session. Go to 'Record a round' to start.")
