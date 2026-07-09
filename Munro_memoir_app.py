@@ -133,7 +133,7 @@ def page_record():
                 "notes": [],
                 **answers,
             })
-            st.success("Saved for this session. See it under 'My rounds', or go "
+            st.success("Saved for this session. See it under 'My munros' (arrows in top-left if you're using a phone), or go "
                        "to 'Finish' when you're done.")
 
 
@@ -141,7 +141,7 @@ def page_my_rounds():
     st.header("My munros")
     entries = get_entries()
     if not entries:
-        st.write("No rounds recorded yet this session. Go to 'Record a round' to start.")
+        st.write("No munros recorded yet this session. Go to 'Record a munro' to start.")
         return
 
     labels = [f"{e['hill']} ({e['date']})" for e in entries]
@@ -182,7 +182,7 @@ def page_finish():
     st.header("Finish")
     entries = get_entries()
     if not entries:
-        st.write("Record at least one round first, then come back here.")
+        st.write("Record at least one munro first, then come back here.")
         return
 
     st.write("Almost done. Copy your reflections below, then go back to the "
