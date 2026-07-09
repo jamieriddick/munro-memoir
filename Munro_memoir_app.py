@@ -1,20 +1,6 @@
 """
 Munro Memoir
 A small web app for recording and reflecting on days in the Scottish hills.
-
-Built with Streamlit, so it is pure Python. Run it locally with:
-    streamlit run munro_memoir.py
-
-The idea is memory rather than performance. Each entry is a remembered day: a
-hill, a written reflection in answer to a few prompts, and an optional photo to
-jog the memory. The numbers are kept deliberately quiet. An entry can be
-returned to within the session, so a memory can be added to as it comes to mind.
-
-The app stores nothing. Reflections live only in the browser for the current
-session. When the participant has finished, the app gathers up what they wrote
-into one block to copy, and sends them to the study questionnaire (in the
-University's Qualtrics) where they paste it in. All data is held in Qualtrics,
-so the app keeps no participant data of its own.
 """
 
 import datetime
@@ -26,21 +12,14 @@ import streamlit as st
 
 # ----------------------------------------------------------------------
 # The Munros (loaded from munros.csv, so the map and stats appear with no upload)
-# ----------------------------------------------------------------------
 # munros.csv holds all 282 current Munros, with name, latitude, longitude and
 # summit height, derived from the Database of British and Irish Hills (DoBIH),
 # v8.0.1. Keep munros.csv in the same folder as this script (and in the GitHub
 # repo when you deploy).
-#
-# Note on the "typical route" figures: distance and ascent depend on which
-# route you take up a hill, so there is no single authoritative value per Munro.
-# This version therefore shows only the summit height in the quiet stats line.
+# Shows the summit height in the quiet stats line.
 
 _munros_df = pd.read_csv(Path(__file__).parent / "munros.csv")
 MUNROS = _munros_df.to_dict("records")
-# Some Munros share a name (there are two Ben More's, three An Socach's, and so
-# on), so the dropdown and lookup use a unique "display_name" that adds a rough
-# area and the height. The plain "name" is what gets stored in the reflection.
 MUNRO_BY_NAME = {m["display_name"]: m for m in MUNROS}
 MUNRO_NAMES = sorted(MUNRO_BY_NAME)
 
@@ -56,10 +35,9 @@ PROMPTS = [
 
 # ----------------------------------------------------------------------
 # The session store (entries kept in the browser for this session only)
-# ----------------------------------------------------------------------
-# st.session_state is Streamlit's per-session memory. We keep the entries a
+# st.session_state is Streamlit's per-session memory. I keep the entries a
 # participant makes here, so they can revisit them while the app is open. It is
-# not saved anywhere and is gone when they close the tab, which is what we want:
+# not saved anywhere and is gone when they close the tab:
 # the only lasting copy is the one they paste into the questionnaire.
 
 def get_entries():
@@ -83,7 +61,6 @@ def assemble_text(entries):
 
 # ----------------------------------------------------------------------
 # Pages
-# ----------------------------------------------------------------------
 
 def page_record():
     st.header("Record a Munro")
@@ -115,7 +92,7 @@ def page_record():
                                   accept_multiple_files=True) or []:
         st.image(photo)
 
-    # The numbers, kept quiet.
+    # The summit heightt.
     st.caption(f"For the record: {hill['height_m']} m summit.")
 
     if st.button("Save this round"):
@@ -126,8 +103,8 @@ def page_record():
         else:
             get_entries().append({
                 "hill": hill["name"],          # the plain name, for display
-                "lat": hill["lat"],            # coordinates captured now, so
-                "lon": hill["lon"],            # revisiting needs no re-lookup
+                "lat": hill["lat"],            
+                "lon": hill["lon"],            
                 "height_m": hill["height_m"],
                 "date": date.isoformat(),
                 "notes": [],
@@ -207,10 +184,10 @@ def main():
     st.sidebar.caption("Your reflections stay in your browser until you copy "
                        "them into the questionnaire. Nothing is saved here.")
 
-    page = st.sidebar.radio("Go to", ["Record a round", "My rounds", "Finish"])
+    page = st.sidebar.radio("Go to", ["Record a round", "My munros", "Finish"])
     if page == "Record a round":
         page_record()
-    elif page == "My rounds":
+    elif page == "My munros":
         page_my_rounds()
     else:
         page_finish()
@@ -219,24 +196,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# ----------------------------------------------------------------------
-# Deploying (much simpler now: no secrets, nothing to store)
-# ----------------------------------------------------------------------
-# 1. requirements.txt in the repo:
-#        streamlit
-#        pandas
-# 2. Push this file and requirements.txt to a public GitHub repo.
-# 3. At share.streamlit.io, sign in with GitHub, pick the repo and this file,
-#    and deploy. You get a public app URL.
-#
-# The flow is survey-first: participants start in the Qualtrics questionnaire,
-# read the information sheet and consent there, then are sent to this app to
-# reflect (open it in a new tab), and finally return to the questionnaire tab
-# to paste their reflections in. So the app does NOT need the survey link: it
-# just tells people to switch back to the tab they came from. Put THIS app's
-# public URL into the questionnaire (and the information sheet), and only ever
-# share the questionnaire link publicly, so consent always comes first.
-
-#pip install streamlit pandas
-#python3 -m streamlit run munro_memoir.py
