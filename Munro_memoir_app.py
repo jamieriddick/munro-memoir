@@ -93,7 +93,7 @@ def page_record():
     # The summit heightt.
     st.caption(f"For the record: {hill['height_m']} m summit.")
 
-    if st.button("Save this round"):
+    if st.button("Save this munro"):
         if not date:
             st.warning("Add the date first.")
         elif not any(answers.values()):
