@@ -14,8 +14,6 @@ import streamlit as st
 # The Munros (loaded from munros.csv, so the map and stats appear with no upload)
 # munros.csv holds all 282 current Munros, with name, latitude, longitude and
 # summit height, derived from the Database of British and Irish Hills (DoBIH),
-# v8.0.1. Keep munros.csv in the same folder as this script (and in the GitHub
-# repo when you deploy).
 # Shows the summit height in the quiet stats line.
 
 _munros_df = pd.read_csv(Path(__file__).parent / "munros.csv")
