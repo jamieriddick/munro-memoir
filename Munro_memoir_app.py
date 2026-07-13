@@ -16,7 +16,7 @@ import streamlit as st
 # summit height, derived from the Database of British and Irish Hills (DoBIH),
 # Shows the summit height in the quiet stats line.
 
-_munros_df = pd.read_csv(Path(__file__).parent / "munros.csv")
+_munros_df = pd.read_csv(Path(__file__).parent / "munros_all_282.csv")
 MUNROS = _munros_df.to_dict("records")
 MUNRO_BY_NAME = {m["display_name"]: m for m in MUNROS}
 MUNRO_NAMES = sorted(MUNRO_BY_NAME)
