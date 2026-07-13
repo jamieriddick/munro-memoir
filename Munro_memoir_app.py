@@ -18,7 +18,7 @@ import streamlit as st
 
 _munros_df = pd.read_csv(Path(__file__).parent / "munros_all_282.csv")
 MUNROS = _munros_df.to_dict("records")
-MUNRO_BY_NAME = {m["display_name"]: m for m in MUNROS}
+MUNRO_BY_NAME = {m["name"]: m for m in MUNROS}
 MUNRO_NAMES = sorted(MUNRO_BY_NAME)
 
 
