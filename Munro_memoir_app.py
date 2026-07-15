@@ -155,8 +155,7 @@ def page_finish():
 
     st.write("Almost done. Copy your reflections below, then go back to the "
              "questionnaire tab you came from and paste them in when asked. "
-             "The questionnaire is where your answers are kept, so this step "
-             "matters.")
+             "The questionnaire is where your answers are kept, so this is important!")
 
     # The copy box. The small icon at its top right copies everything.
     st.code(assemble_text(entries), language=None)
