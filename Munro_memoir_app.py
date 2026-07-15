@@ -175,7 +175,7 @@ def main():
     st.sidebar.caption("Your reflections stay in your browser until you copy "
                        "them into the questionnaire. Nothing is saved here.")
 
-    page = st.sidebar.radio("Go to", ["Record a round", "My munros", "Finish"])
+    page = st.sidebar.radio("Go to", ["Record a munro", "My munros", "Finish"])
     if page == "Record a round":
         page_record()
     elif page == "My munros":
