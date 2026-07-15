@@ -51,8 +51,6 @@ def assemble_text(entries):
         for key, question in PROMPTS:
             if e.get(key):
                 lines.append(f"{question}: {e[key]}")
-        for note in e.get("notes", []):
-            lines.append(f"Coming back to this: {note}")
         blocks.append("\n".join(lines))
     return "\n\n".join(blocks)
 
@@ -90,7 +88,7 @@ def page_record():
                                   accept_multiple_files=True) or []:
         st.image(photo)
 
-    # The summit heightt.
+    # The summit height.
     st.caption(f"For the record: {hill['height_m']} m summit.")
 
     if st.button("Save this munro"):
@@ -101,28 +99,41 @@ def page_record():
         else:
             get_entries().append({
                 "hill": hill["name"],          # the plain name, for display
-                "lat": hill["lat"],            
-                "lon": hill["lon"],            
+                "lat": hill["lat"],
+                "lon": hill["lon"],
                 "height_m": hill["height_m"],
                 "date": date.isoformat(),
-                "notes": [],
                 **answers,
             })
             st.success("Saved for this session. See it under 'My munros' (arrows in top-left if you're using a phone), or go "
                        "to 'Finish' when you're done.")
 
 
-def page_my_rounds():
+def page_my_munros():
     st.header("My munros")
     entries = get_entries()
     if not entries:
         st.write("No munros recorded yet this session. Go to 'Record a munro' to start.")
         return
 
-    labels = [f"{e['hill']} ({e['date']})" for e in entries]
-    i = labels.index(st.selectbox("Choose a round to revisit", labels))
-    entry = entries[i]
+    st.write("Tap a hill to revisit the day.")
 
+    # A grid of tiles, one per saved munro. Clicking a tile sets which entry
+    # to show below.
+    cols = st.columns(2)
+    for i, e in enumerate(entries):
+        col = cols[i % 2]
+        if col.button(f"{e['hill']}\n\n{e['date']}", key=f"tile_{i}",
+                      use_container_width=True):
+            st.session_state["selected_entry"] = i
+
+    selected = st.session_state.get("selected_entry")
+    if selected is None or selected >= len(entries):
+        return
+
+    entry = entries[selected]
+
+    st.divider()
     st.subheader(entry["hill"])
     st.caption(entry["date"])
     st.map(pd.DataFrame({"lat": [entry["lat"]], "lon": [entry["lon"]]}), zoom=9)
@@ -133,24 +144,6 @@ def page_my_rounds():
             st.write(entry[key])
 
     st.caption(f"For the record: {entry['height_m']} m summit.")
-
-    # Coming back to this: notes added while the memory is fresh in mind.
-    st.divider()
-    st.subheader("Coming back to this")
-    for note in entry["notes"]:
-        st.write(note)
-    if not entry["notes"]:
-        st.caption("Nothing added yet. Revisit this day whenever it comes to mind.")
-
-    later = st.text_area("Add a note, looking back",
-                         key=f"n_{i}", placeholder="How does this day feel now?",
-                         height=90)
-    if st.button("Add this note"):
-        if later.strip():
-            entry["notes"].append(later.strip())
-            st.rerun()
-        else:
-            st.warning("Write something first.")
 
 
 def page_finish():
