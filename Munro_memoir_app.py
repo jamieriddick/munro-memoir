@@ -179,11 +179,10 @@ def main():
     if page == "Record a munro":
         page_record()
     elif page == "My munros":
-        page_my_rounds()
+        page_my_munros()
     else:
         page_finish()
 
 
 if __name__ == "__main__":
     main()
-
