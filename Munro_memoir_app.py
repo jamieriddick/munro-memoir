@@ -176,7 +176,7 @@ def main():
                        "them into the questionnaire. Nothing is saved here.")
 
     page = st.sidebar.radio("Go to", ["Record a munro", "My munros", "Finish"])
-    if page == "Record a round":
+    if page == "Record a munro":
         page_record()
     elif page == "My munros":
         page_my_rounds()
